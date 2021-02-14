@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.jana.creditreportmodel.dao.CustomerDao;
 import com.jana.creditreportmodel.entity.CustomersEntity;
 import com.jana.creditreportmodel.exceptions.CustomerNotFoundException;
-import com.jana.creditreportmodel.exceptions.CustomerNumberAlreadyExistsException;
 import com.jana.creditreportmodel.exceptions.CustomerRecordNotCreatedException;
 
 

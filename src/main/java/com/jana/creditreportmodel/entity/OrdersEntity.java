@@ -37,11 +37,22 @@ public class OrdersEntity implements Serializable {
 	@Id
 	@GeneratedValue
 	private Long orderId;
+	
 	private String billNumber;
+	
 	private LocalDate billDate;
-	private Long billAmount;
+	
 	private Long creditInterest;
+	
 	private Boolean isCredit;
+    
+	@ManyToOne
+	@JoinColumn(name="paidStatusId")
+	private PaidStatus paidStatus;
+
+	private Long billAmount;
+	
+	
 	
 	@Transient
 	private Long totalAmount;

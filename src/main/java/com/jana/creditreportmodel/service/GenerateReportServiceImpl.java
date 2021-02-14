@@ -1,14 +1,18 @@
 package com.jana.creditreportmodel.service;
 
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jana.creditreportmodel.constants.ReportCommonConstants;
 import com.jana.creditreportmodel.entity.CustomersEntity;
 import com.jana.creditreportmodel.entity.OrdersEntity;
 import com.jana.creditreportmodel.report.pdf.ReportGenerator;
@@ -30,33 +34,61 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 	};
 
 	@Override
-	public void generateReportForAll(final LocalDate generateDate) {
-		List<CustomersEntity> allCustomers = customerService.findAll();
+	public byte[] generateReportForAll(final LocalDate generateDate) {
 		
-		allCustomers.forEach(customersEntity-> {
+	
+		   
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+       
+       	 List<CustomersEntity> allCustomers = customerService.findAll();
+		
+     	
+	  	allCustomers.forEach(customersEntity-> {
 			sortByDate(customersEntity.getOrdersEntityList());
 			performIntrestCalculation(customersEntity.getOrdersEntityList(),generateDate);
 			updateTotalAmount(customersEntity.getOrdersEntityList());
-			reportGenerator.generatePdfReport(customersEntity, generateDate);});
+			byte[] bytes = reportGenerator.generatePdfReport(customersEntity, generateDate);
+			ZipEntry zipEntry = new ZipEntry(customersEntity.getCustomerName()+
+					ReportCommonConstants.PDF_EXTENSION);	
+			 zipEntry.setSize(bytes.length);
+			 try {
+				zipOutputStream.putNextEntry(zipEntry);
+				 zipOutputStream.write(bytes);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	  	});
+	  		
+	  	try {
+	  		zipOutputStream.closeEntry();
+			zipOutputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	  	 return byteArrayOutputStream.toByteArray();
 		
 	}
 	@Override
-	public ByteArrayInputStream generateReportForCustomer(Long customerId, LocalDate generateDate)  {
+	public byte[] generateReportForCustomer(Long customerId, LocalDate generateDate)  {
 		
 		
 		    CustomersEntity customer = customerService.findById(customerId);
 		
-			ByteArrayInputStream bytes = generateReportForCustomer(customer,generateDate);
+			 byte[] bytes = generateReportForCustomer(customer,generateDate);
 			return bytes;
-		
 		
 	}
 
-	public ByteArrayInputStream generateReportForCustomer(CustomersEntity customersEntity, LocalDate generateDate) {
+	public  byte[] generateReportForCustomer(CustomersEntity customersEntity, LocalDate generateDate) {
 		sortByDate(customersEntity.getOrdersEntityList());
 		performIntrestCalculation(customersEntity.getOrdersEntityList(),generateDate);
 		updateTotalAmount(customersEntity.getOrdersEntityList());
-	    ByteArrayInputStream bytes = reportGenerator.generateByteArrayReport(customersEntity,generateDate);
+	     byte[] bytes = reportGenerator.generatePdfReport(customersEntity,generateDate);
 	    return bytes;
 	}
 
@@ -65,6 +97,7 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 		ordersEntity.forEach(order->order.setTotalAmount(order.getCreditInterest()+order.getBillAmount()));
 	}
 
+	
 	private void sortByDate(List<OrdersEntity> ordersEntity) {
 		
 		Collections.sort(ordersEntity,sortByBillDate);

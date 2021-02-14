@@ -1,10 +1,8 @@
 package com.jana.creditreportmodel.controller;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +15,7 @@ import com.jana.creditreportmodel.constants.ReportCommonConstants;
 import com.jana.creditreportmodel.entity.CustomersEntity;
 import com.jana.creditreportmodel.service.CustomerService;
 import com.jana.creditreportmodel.service.GenerateReportService;
+import com.jana.creditreportmodel.utils.CommonUtils;
 
 
 
@@ -32,19 +31,15 @@ public class ReportGenerationController {
 	
 
 	@GetMapping(value="/customers/{customerId}/report",produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> generateReportById(@PathVariable(value="customerId",required=true) 
+	public ResponseEntity<byte[]> generateReportById(@PathVariable(value="customerId",required=true) 
 	   Long customerId,@RequestParam(required = false) String generateDate) {
 		
-		     LocalDate date=null;
-		     if(generateDate==null)
-			    date=LocalDate.now();
-		     else
-		    	date=LocalDate.parse(generateDate);
+		     LocalDate date = CommonUtils.converttoLocalDate(generateDate);
 		     
 			CustomersEntity customer = customerService.findById(customerId);
 
 		    
-		     ByteArrayInputStream bytes = generateReportService.
+		      byte[] bytes = generateReportService.
 		    		               generateReportForCustomer(customer, date);
 		     
 		      HttpHeaders headers = new HttpHeaders();
@@ -55,24 +50,30 @@ public class ReportGenerationController {
 		                .ok()
 		                .headers(headers)
 		                .contentType(MediaType.APPLICATION_PDF)
-		                .body(new InputStreamResource(bytes));
+		                .body(bytes);
 		   //  return ResponseEntity.ok().body("Successfully Genereated");
 	
 		
 	}
 	
 	@GetMapping("/customers/genarateAllReports")
-	public ResponseEntity<String> genarateAllReports(
+	public ResponseEntity<byte[]> genarateAllReports(
 	@RequestParam(required = false) String generateDate) {
-		  LocalDate date=null;
-	     if(generateDate==null)
-		    date=LocalDate.now();
-	     else
-	    	date=LocalDate.parse(generateDate);
-	     
-		     generateReportService.generateReportForAll(date);
-	        return ResponseEntity.ok().body("successfully generated all the reports");
+		
+		     LocalDate date = CommonUtils.converttoLocalDate(generateDate);
+		     
+		     byte[] bytes = generateReportService.generateReportForAll(date);
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.add("Content-Disposition", "inline; filename="+"test"+".zip");
+
+	        return ResponseEntity
+	                .ok()
+	                .headers(headers)
+	                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+	                .body(bytes);
 	}
+
+
 	
 	
 }

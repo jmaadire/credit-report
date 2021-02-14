@@ -1,10 +1,6 @@
 package com.jana.creditreportmodel.report.pdf;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
 
@@ -14,31 +10,18 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.jana.creditreportmodel.constants.ReportCommonConstants;
 import com.jana.creditreportmodel.entity.CustomersEntity;
 
 @Service
 public class PdfReportGeneratorImpl implements ReportGenerator {
 
 	@Override
-	public ByteArrayInputStream generateByteArrayReport(CustomersEntity customersEntity,LocalDate generateDate) {
-        ByteArrayOutputStream out= new ByteArrayOutputStream();
-        generatePdfcontent(customersEntity, generateDate, out);
-        return new ByteArrayInputStream(out.toByteArray());
-    }
-	
-	@Override
-	public void generatePdfReport(CustomersEntity customersEntity, LocalDate generateDate) {
-		try {
-			FileOutputStream fileout = new FileOutputStream(
-			        new File(customersEntity.getCustomerName() + ReportCommonConstants.PDF_EXTENSION));
-			generatePdfcontent(customersEntity, generateDate, fileout);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	public byte[] generatePdfReport(CustomersEntity customersEntity, LocalDate generateDate) {
+		   ByteArrayOutputStream out= new ByteArrayOutputStream();
+	        generatePdfcontent(customersEntity, generateDate, out);
+	        return out.toByteArray();
 	}
+
 
 	private void generatePdfcontent(CustomersEntity customersEntity, LocalDate generateDate,
 			OutputStream out) {
@@ -67,6 +50,9 @@ public class PdfReportGeneratorImpl implements ReportGenerator {
             }
         }
 	}
+
+
+
 
 	
 
