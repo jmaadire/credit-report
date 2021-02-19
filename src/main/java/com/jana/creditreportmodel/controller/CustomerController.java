@@ -64,17 +64,25 @@ public ResponseEntity<CustomersEntity> updateCustomer(@RequestBody CustomersEnti
 
 
 
-@GetMapping("updateBasicDetails")
+@GetMapping("/updateBasicDetails")
 public String updateBasicDetails() {
 
 	
-	CustomersEntity customersEntity=new CustomersEntity();
+	CustomersEntity customersEntity1=new CustomersEntity();
+	CustomersEntity customersEntity2=new CustomersEntity();
      //customersEntity.setCustomerNumber(1l);
-	 customersEntity.setCustomerName("Jana");
-	 customersEntity.setPhoneNumber(9989057975l);
-	 customersEntity.setAlternatePhoneNumber(7010354849l);
-	 customersEntity.setEmailId("janardhanr728@gmail.com");
-	 customersEntity.setDateOfBirth(LocalDate.of(1995, 10, 06));
+	 customersEntity1.setCustomerName("Jana");
+	 customersEntity1.setPhoneNumber(9989057975l);
+	 customersEntity1.setAlternatePhoneNumber(7010354849l);
+	 customersEntity1.setEmailId("raghavmalgari@gmail.com");
+	 customersEntity1.setDateOfBirth(LocalDate.of(1995, 10, 06));
+	 
+	 customersEntity2.setCustomerName("raghu");
+	 customersEntity2.setPhoneNumber(9493809451l);
+	 customersEntity2.setAlternatePhoneNumber(7010354849l);
+	 customersEntity2.setEmailId("raghavmalgari@gmail.com");
+	 customersEntity2.setDateOfBirth(LocalDate.of(1995, 10, 06));
+	 
 	 
 	 OrdersEntity o4 = new OrdersEntity();
      o4.setBillDate(LocalDate.of(2019, 02, 10));
@@ -101,12 +109,15 @@ public String updateBasicDetails() {
 	list.add(o2);
 	list.add(o3);
 	list.add(o4);
-	list.forEach(action->action.setCustomersEntity(customersEntity));
-	customersEntity.setOrdersEntityList(list);
+	list.forEach(action->action.setCustomersEntity(customersEntity1));
+	customersEntity1.setOrdersEntityList(list);
+	list.forEach(action->action.setCustomersEntity(customersEntity2));
+	customersEntity2.setOrdersEntityList(list);
 	
 	  
 	
-	 customerService.save(customersEntity);
+	 customerService.save(customersEntity1);
+	 customerService.save(customersEntity2);
 	
 	return "success";
 }
