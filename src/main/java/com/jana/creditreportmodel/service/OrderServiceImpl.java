@@ -15,7 +15,6 @@ import com.jana.creditreportmodel.entity.CustomersEntity;
 import com.jana.creditreportmodel.entity.OrdersEntity;
 import com.jana.creditreportmodel.exceptions.InvalidCustomerOfOrderException;
 import com.jana.creditreportmodel.exceptions.OrderNotFoundException;
-import com.jana.creditreportmodel.exceptions.OrderNumberAlreadyExistsException;
 import com.jana.creditreportmodel.exceptions.OrderRecordNotCreatedException;
 
 
@@ -53,7 +52,6 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrdersEntity save(OrdersEntity orderEntity) {
-		if(!orderDao.existsById(orderEntity.getOrderId()))  {
 			orderDao.save(orderEntity);
 		  Optional<OrdersEntity> orderOptional = orderDao.
 				  findById(orderEntity.getOrderId());
@@ -63,14 +61,12 @@ public class OrderServiceImpl implements OrderService {
 			 
 			 throw new OrderRecordNotCreatedException(orderEntity.getOrderId(),orderEntity.getBillNumber()
 					 ,orderEntity.getBillDate());
-		}
 		
-		throw new OrderNumberAlreadyExistsException(orderEntity.getOrderId(),orderEntity.getBillNumber()
-				 ,orderEntity.getBillDate());
 	}
 
 	@Override
 	public OrdersEntity update(OrdersEntity orderEntity,CustomersEntity customerEntity) {
+		
 		if(orderDao.existsById(orderEntity.getOrderId()))  {
 			Long customerNumber=orderEntity.getCustomersEntity().getCustomerNumber();
 			

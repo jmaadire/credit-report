@@ -33,7 +33,7 @@ public class OrdersEntity implements Serializable {
 	
 	private static final long serialVersionUID = -6983381319761816165L;
 	
-	@JsonIgnore
+	
 	@Id
 	@GeneratedValue
 	private Long orderId;
@@ -60,6 +60,7 @@ public class OrdersEntity implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="CustomerNumber")
 	@NotNull
+	@JsonIgnore
 	private CustomersEntity customersEntity;
 	
 }
