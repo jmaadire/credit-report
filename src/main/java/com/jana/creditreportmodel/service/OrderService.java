@@ -12,7 +12,6 @@ public interface OrderService {
  
  public OrdersEntity findById(Long id);
  
- public List<OrdersEntity> findByCustomerNumber(Long customerNumber);
  
  public OrdersEntity  save(OrdersEntity order);
  

@@ -42,25 +42,31 @@ public class OrdersEntity implements Serializable {
 	
 	private LocalDate billDate;
 	
-	private Long creditInterest;
 	
-	private Boolean isCredit;
+	@ManyToOne
+	@JoinColumn(name="paymentMethodId")
+	private PaymentMethod paymentMethod;
     
 	@ManyToOne
-	@JoinColumn(name="paidStatusId")
-	private PaidStatus paidStatus;
+	@JoinColumn(name="transStatusId")
+	private TransactionStatus transactionStatus;
 
 	private Long billAmount;
 	
-	
-	
-	@Transient
-	private Long totalAmount;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="CustomerNumber")
 	@NotNull
 	@JsonIgnore
 	private CustomersEntity customersEntity;
+	
+	
+	@Transient
+	@JsonIgnore
+	private Long creditInterest;
+	
+	@Transient
+	@JsonIgnore
+	private Long totalAmount;
 	
 }

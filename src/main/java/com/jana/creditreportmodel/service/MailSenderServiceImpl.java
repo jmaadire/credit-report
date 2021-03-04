@@ -40,7 +40,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 			helper.setTo(toMail);
 	        helper.setText("<html><body><h5>please find attachement</h5><body></html>", true);
 	        helper.addAttachment(customerEntity.getCustomerName()+"_creditReport", new ByteArrayResource(bytes), "application/zip");
-	        helper.setSubject("report Generated");
+	        helper.setSubject("customer report Generated");
 	        javaMailSender.send(message);
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
@@ -55,7 +55,6 @@ public class MailSenderServiceImpl implements MailSenderService {
 		 
 		 MimeMessage message = javaMailSender.createMimeMessage();
 		
-		 DataSource source = new ByteArrayDataSource(bytes, "application/zip");
 		 
          try {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -63,7 +62,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 	        helper.setText("<html><body><h5>please find attachement</h5><body></html>", true);
 	        helper.addAttachment("AllcustomersReports.zip", new ByteArrayResource(bytes));
 	        
-	        helper.setSubject("report Generation");
+	        helper.setSubject("customer report Generated");
 	        javaMailSender.send(message);
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block

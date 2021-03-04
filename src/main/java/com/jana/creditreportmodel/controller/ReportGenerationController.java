@@ -51,12 +51,10 @@ public class ReportGenerationController {
 		                .headers(headers)
 		                .contentType(MediaType.APPLICATION_PDF)
 		                .body(bytes);
-		   //  return ResponseEntity.ok().body("Successfully Genereated");
-	
 		
 	}
 	
-	@GetMapping("/customers/genarateAllReports")
+	@GetMapping("/customers/allReports")
 	public ResponseEntity<byte[]> genarateAllReports(
 	@RequestParam(required = false) String generateDate) {
 		
@@ -64,7 +62,7 @@ public class ReportGenerationController {
 		     
 		     byte[] bytes = generateReportService.generateReportForAll(date);
 	        HttpHeaders headers = new HttpHeaders();
-	        headers.add("Content-Disposition", "inline; filename="+"test"+".zip");
+	        headers.add("Content-Disposition", "inline; filename="+"all_customers_report"+".zip");
 
 	        return ResponseEntity
 	                .ok()

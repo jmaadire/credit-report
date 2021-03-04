@@ -25,17 +25,17 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	 private OrderDao orderDao;
 	
-	Comparator<OrdersEntity> sortByBillDate= (order1,order2)->{
-		
-		return order1.getBillDate().compareTo(order2.getBillDate());
-	};
+	Comparator<OrdersEntity> sortBypaymentType=Comparator.comparing(OrdersEntity::getTransactionStatus)
+			                                          .thenComparing(OrdersEntity::getPaymentMethod)
+			                                          .thenComparing(OrdersEntity::getBillDate)
+			                                          .thenComparing(OrdersEntity::getBillNumber);
 	
 	@Override
 	public List<OrdersEntity> findAll() {
 		Iterable<OrdersEntity> orders = orderDao.findAll();
 		List<OrdersEntity> ordersList=new ArrayList<>();
 		orders.forEach(ordersList::add);
-		Collections.sort(ordersList,sortByBillDate);
+		Collections.sort(ordersList,sortBypaymentType);
 		return ordersList;
 	}
 
@@ -52,7 +52,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrdersEntity save(OrdersEntity orderEntity) {
-			orderDao.save(orderEntity);
+		  
+		  orderDao.save(orderEntity);
 		  Optional<OrdersEntity> orderOptional = orderDao.
 				  findById(orderEntity.getOrderId());
 		     
@@ -93,11 +94,7 @@ public class OrderServiceImpl implements OrderService {
 		
 	}
 
-	@Override
-	public List<OrdersEntity> findByCustomerNumber(Long customerNumber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 
 }

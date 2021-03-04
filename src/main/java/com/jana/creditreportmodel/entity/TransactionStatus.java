@@ -19,8 +19,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name="paidStatus")
-public class PaidStatus implements Serializable {
+@Table(name="transactionStatus")
+public class TransactionStatus implements Serializable,Comparable<TransactionStatus> {
 	
    /**
 	 * 
@@ -29,9 +29,15 @@ public class PaidStatus implements Serializable {
 	
   @Id
   @GeneratedValue
-  private Long  paidStatusId;
+  private Integer transStatusId;
   
-  private String paidStatus;
+  private String transStatus;
+
+  
+@Override
+public int compareTo(TransactionStatus paid) {
+	return transStatusId.compareTo(paid.getTransStatusId());
+}
    
 
 }
