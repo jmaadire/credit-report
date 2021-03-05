@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.jana.creditreportmodel.exceptions.CustomerNotFoundException;
 import com.jana.creditreportmodel.exceptions.CustomerNumberAlreadyExistsException;
+import com.jana.creditreportmodel.exceptions.CustomerNumberIsEmptyException;
 import com.jana.creditreportmodel.exceptions.CustomerRecordNotCreatedException;
 import com.jana.creditreportmodel.exceptions.InvalidCustomerOfOrderException;
 import com.jana.creditreportmodel.exceptions.NoDataFoundException;
@@ -31,6 +32,18 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<Object> handleCustomerNotFoundException(
     		CustomerNotFoundException ex, WebRequest request) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+    
+    
+    @ExceptionHandler(CustomerNumberIsEmptyException.class)
+    public ResponseEntity<Object> handleCustomerIsEmptyException(
+    		CustomerNumberIsEmptyException ex, WebRequest request) {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());

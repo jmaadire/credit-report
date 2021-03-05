@@ -91,14 +91,11 @@ public ResponseEntity<OrdersEntity> updateOrder(@PathVariable(value="customerId"
 		@RequestBody OrdersEntity orderEntity) {
 	 
 	     CustomersEntity customer = customerService.findById(customerId); 
-	  
+		    orderEntity.setCustomersEntity(customer);
 	     OrdersEntity updatedOrderEntity = orderService.update(orderEntity,customer);
         return ResponseEntity.accepted().body(updatedOrderEntity);
    
 }
-
-
-
 
 
 }

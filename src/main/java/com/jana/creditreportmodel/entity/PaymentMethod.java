@@ -19,19 +19,24 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name="paidStatus")
-public class PaidStatus implements Serializable {
+@Table(name="paymentMethod")
+public class PaymentMethod implements Serializable,Comparable<PaymentMethod> {
 	
-   /**
+   
+	
+     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 7020677951419916927L;
-	
-  @Id
-  @GeneratedValue
-  private Long  paidStatusId;
-  
-  private String paidStatus;
-   
+	private static final long serialVersionUID = 5612511939994158035L;
 
+  @Id
+  private Integer  paymentMethodId;
+  
+  private String paymentMethodStatus;
+
+@Override
+public int compareTo(PaymentMethod pay) {
+	return paymentMethodId.compareTo(pay.getPaymentMethodId());
+}
+   
 }

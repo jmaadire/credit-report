@@ -45,10 +45,9 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 		
      	
 	  	allCustomers.forEach(customersEntity-> {
-			sortByDate(customersEntity.getOrdersEntityList());
-			performIntrestCalculation(customersEntity.getOrdersEntityList(),generateDate);
-			updateTotalAmount(customersEntity.getOrdersEntityList());
-			byte[] bytes = reportGenerator.generatePdfReport(customersEntity, generateDate);
+	  		
+			byte[] bytes = generateReportForCustomer(customersEntity,generateDate);
+			
 			ZipEntry zipEntry = new ZipEntry(customersEntity.getCustomerName()+
 					ReportCommonConstants.PDF_EXTENSION);	
 			 zipEntry.setSize(bytes.length);
@@ -57,7 +56,6 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 				 zipOutputStream.write(bytes);
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -67,7 +65,6 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 	  		zipOutputStream.closeEntry();
 			zipOutputStream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	  	 return byteArrayOutputStream.toByteArray();
@@ -86,7 +83,7 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 
 	public  byte[] generateReportForCustomer(CustomersEntity customersEntity, LocalDate generateDate) {
 		sortByDate(customersEntity.getOrdersEntityList());
-		performIntrestCalculation(customersEntity.getOrdersEntityList(),generateDate);
+		ReportUtils.performIntrestCalculation(customersEntity.getOrdersEntityList(),generateDate);
 		updateTotalAmount(customersEntity.getOrdersEntityList());
 	     byte[] bytes = reportGenerator.generatePdfReport(customersEntity,generateDate);
 	    return bytes;
@@ -103,13 +100,7 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 		Collections.sort(ordersEntity,sortByBillDate);
 	}
 
-	private void performIntrestCalculation(List<OrdersEntity> ordersEntity, LocalDate generateDate) {
-       ordersEntity.forEach(order->{
-    	 Long interest=ReportUtils.calculateInterest(order.getBillDate(), generateDate, 
-    			 order.getBillAmount());
-    	 order.setCreditInterest(interest);
-       });
-	}
+	
 
 	
 		

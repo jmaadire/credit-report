@@ -35,7 +35,7 @@ public class PdfReportGeneratorImpl implements ReportGenerator {
             PdfWriter writer = PdfWriter.getInstance(document,out);
           //  writer.getISOBytes(text)
               HeaderFooter event = new HeaderFooter();
-              event.setHeader("Test Report");
+              event.setHeader("Final Report");
               writer.setPageEvent(event);
             document.open();
             PDFCreator.addMetaData(document, title);
@@ -43,7 +43,6 @@ public class PdfReportGeneratorImpl implements ReportGenerator {
             PDFCreator.addContent(document, customersEntity.getOrdersEntityList(),generateDate);
         }catch (DocumentException e) {
             e.printStackTrace();
-            System.out.println("FileNotFoundException occurs.." + e.getMessage());
         }finally{
             if(null != document){
                 document.close();

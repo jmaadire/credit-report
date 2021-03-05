@@ -15,7 +15,6 @@ import com.jana.creditreportmodel.entity.CustomersEntity;
 import com.jana.creditreportmodel.entity.OrdersEntity;
 import com.jana.creditreportmodel.exceptions.InvalidCustomerOfOrderException;
 import com.jana.creditreportmodel.exceptions.OrderNotFoundException;
-import com.jana.creditreportmodel.exceptions.OrderNumberAlreadyExistsException;
 import com.jana.creditreportmodel.exceptions.OrderRecordNotCreatedException;
 
 
@@ -26,17 +25,17 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	 private OrderDao orderDao;
 	
-	Comparator<OrdersEntity> sortByBillDate= (order1,order2)->{
-		
-		return order1.getBillDate().compareTo(order2.getBillDate());
-	};
+	Comparator<OrdersEntity> sortBypaymentType=Comparator.comparing(OrdersEntity::getTransactionStatus)
+			                                          .thenComparing(OrdersEntity::getPaymentMethod)
+			                                          .thenComparing(OrdersEntity::getBillDate)
+			                                          .thenComparing(OrdersEntity::getBillNumber);
 	
 	@Override
 	public List<OrdersEntity> findAll() {
 		Iterable<OrdersEntity> orders = orderDao.findAll();
 		List<OrdersEntity> ordersList=new ArrayList<>();
 		orders.forEach(ordersList::add);
-		Collections.sort(ordersList,sortByBillDate);
+		Collections.sort(ordersList,sortBypaymentType);
 		return ordersList;
 	}
 
@@ -53,8 +52,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrdersEntity save(OrdersEntity orderEntity) {
-		if(!orderDao.existsById(orderEntity.getOrderId()))  {
-			orderDao.save(orderEntity);
+		  
+		  orderDao.save(orderEntity);
 		  Optional<OrdersEntity> orderOptional = orderDao.
 				  findById(orderEntity.getOrderId());
 		     
@@ -63,14 +62,12 @@ public class OrderServiceImpl implements OrderService {
 			 
 			 throw new OrderRecordNotCreatedException(orderEntity.getOrderId(),orderEntity.getBillNumber()
 					 ,orderEntity.getBillDate());
-		}
 		
-		throw new OrderNumberAlreadyExistsException(orderEntity.getOrderId(),orderEntity.getBillNumber()
-				 ,orderEntity.getBillDate());
 	}
 
 	@Override
 	public OrdersEntity update(OrdersEntity orderEntity,CustomersEntity customerEntity) {
+		
 		if(orderDao.existsById(orderEntity.getOrderId()))  {
 			Long customerNumber=orderEntity.getCustomersEntity().getCustomerNumber();
 			
@@ -97,11 +94,7 @@ public class OrderServiceImpl implements OrderService {
 		
 	}
 
-	@Override
-	public List<OrdersEntity> findByCustomerNumber(Long customerNumber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 
 }

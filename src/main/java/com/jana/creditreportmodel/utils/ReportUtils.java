@@ -2,8 +2,10 @@ package com.jana.creditreportmodel.utils;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import com.jana.creditreportmodel.constants.ReportCommonConstants;
+import com.jana.creditreportmodel.entity.OrdersEntity;
 
 
 public class ReportUtils {
@@ -23,4 +25,12 @@ public class ReportUtils {
 
 		return days;
 	}
+	
+	public static void performIntrestCalculation(List<OrdersEntity> ordersEntity, LocalDate generateDate) {
+	       ordersEntity.forEach(order->{
+	    	 Long interest=ReportUtils.calculateInterest(order.getBillDate(), generateDate, 
+	    			 order.getBillAmount());
+	    	 order.setCreditInterest(interest);
+	       });
+		}
 }
