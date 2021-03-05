@@ -30,7 +30,6 @@ public class PaymentMethod implements Serializable,Comparable<PaymentMethod> {
 	private static final long serialVersionUID = 5612511939994158035L;
 
   @Id
-  @GeneratedValue
   private Integer  paymentMethodId;
   
   private String paymentMethodStatus;

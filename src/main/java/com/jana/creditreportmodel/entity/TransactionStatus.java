@@ -28,7 +28,6 @@ public class TransactionStatus implements Serializable,Comparable<TransactionSta
 	private static final long serialVersionUID = 7020677951419916927L;
 	
   @Id
-  @GeneratedValue
   private Integer transStatusId;
   
   private String transStatus;
