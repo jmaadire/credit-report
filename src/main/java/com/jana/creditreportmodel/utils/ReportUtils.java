@@ -33,4 +33,8 @@ public class ReportUtils {
 	    	 order.setCreditInterest(interest);
 	       });
 		}
+	
+	private void testreport() {
+		//donotihng
+	}
 }
