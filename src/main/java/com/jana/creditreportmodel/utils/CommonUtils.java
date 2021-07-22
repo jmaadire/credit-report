@@ -14,5 +14,9 @@ public class CommonUtils {
 	}
 	
 	
+	public static LocalDate GetToday() {
+		return LocalDate.now();
+	}
+	
 
 }
